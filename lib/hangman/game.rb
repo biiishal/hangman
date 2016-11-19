@@ -35,6 +35,7 @@ module Hangman
     end
 
     def game_win_message
+      puts display_word.join("")
       "Congratulations you won the game!\n<><><><><><><><><><><><><><><><><><>\n<><><><><><><><><><><><><><><><><><>"
     end
 

@@ -2,16 +2,20 @@
 chances: 7
 player: !ruby/object:Hangman::Player
   name: Player1
-  score: 3
+  score: 7
 winning_word:
-- c
-- h
-- u
-- r
-- c
-- h
-display_word:
 - 
+- 
+- 
+- g
+- e
+- h
+- o
+- g
+display_word:
+- h
+- e
+- d
 - 
 - 
 - 
