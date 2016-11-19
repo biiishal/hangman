@@ -22,7 +22,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To play clone the repo in the machine. CD to the root directory. Then:
+```
+    $ ./example/example.rb
+```
+to play the game.
 
 ## Development
 
