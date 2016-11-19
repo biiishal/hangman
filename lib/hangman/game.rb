@@ -4,17 +4,16 @@
 module Hangman
 
   class Game
-    # @@dictionary_path = "../data/dictionary.txt"
-    attr_accessor :display_word, :winning_word, :player
+    attr_accessor :display_word, :winning_word, :player, :chances
     def initialize(player)
       @chances = 7
       @player = player
-      @@dictionary = File.open("./data/dictionary.txt").map { |word| word.strip }
+      @@dictionary = File.open(@@dictionary_path).map { |word| word.strip }
     end
 
     def update_winning_word
-      @winning_word = @@dictionary.sample.split('')
-      @display_word = Array.new(winning_word.length)
+      @winning_word ||= @@dictionary.sample.split('')
+      @display_word ||= Array.new(winning_word.length)
     end
 
     def solicit_move
@@ -43,15 +42,27 @@ module Hangman
       "You lost."
     end
 
+    def save_progress
+      file = File.open(@@save_path, "w")
+      file.write(self.to_yaml)
+      file.close
+    end
+
+    def load_progress
+      YAML.load_file(@@save_path).play
+    end
+
     def check_game_progress
       if display_word.none? { |e| e.nil? }
         @player.score += 1
         puts game_win_message
+        binding.pry
         reset
       elsif @chances == 0
         puts game_over_message
         reset
       end
+      binding.pry
     end
 
     def reset
@@ -75,6 +86,10 @@ module Hangman
       end
     end
 
+    private
+
+    @@dictionary_path = "./data/dictionary.txt"
+    @@save_path = "./data/save_data.yml"
 
   end
 end
