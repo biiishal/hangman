@@ -1,25 +1,33 @@
 --- !ruby/object:Hangman::Game
-chances: 7
+chances: 5
 player: !ruby/object:Hangman::Player
   name: Player1
-  score: 1
+  score: 0
 winning_word:
 - 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-display_word:
-- s
 - e
-- v
+- x
+- t
 - e
 - r
-- a
+- 
+- u
+- s
 - n
-- c
 - e
+- s
+- s
+display_word:
+- d
+- 
+- 
+- 
+- 
+- 
+- o
+- 
+- 
+- 
+- 
+- 
+- 

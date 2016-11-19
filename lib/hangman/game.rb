@@ -8,7 +8,7 @@ module Hangman
     def initialize(player)
       @chances = 7
       @player = player
-      @@dictionary = File.open(@@dictionary_path).map { |word| word.strip }
+      @@dictionary = File.open(@@dictionary_path).map { |word| word.strip.downcase }
     end
 
     def update_winning_word
@@ -17,7 +17,7 @@ module Hangman
     end
 
     def solicit_move
-      "Enter a guess character : "
+      "Enter a guess character ('save' to save | 'load' to load | 'exit' to quit): "
     end
 
     def compare_guess(guess)
@@ -31,11 +31,11 @@ module Hangman
     end
 
     def display_progress
-      puts display_word.to_s + "  Your score:" +player.score.to_s
+      puts display_word.to_s + " Chances left:" + @chances.to_s +  "  Your score:" + player.score.to_s
     end
 
     def game_win_message
-      "Congratulations you won the game!"
+      "Congratulations you won the game!\n<><><><><><><><><><><><><><><><><><>\n<><><><><><><><><><><><><><><><><><>"
     end
 
     def game_over_message
@@ -56,33 +56,57 @@ module Hangman
       if display_word.none? { |e| e.nil? }
         @player.score += 1
         puts game_win_message
-        binding.pry
         reset
       elsif @chances == 0
         puts game_over_message
         reset
       end
-      binding.pry
     end
 
     def reset
-      update_winning_word
+      @winning_word = @@dictionary.sample.split('')
+      @display_word = Array.new(winning_word.length)
+      binding.pry
+      puts winning_word
       @chances = 7
+    end
+
+    def handle_input(input)
+      if winning_word.include?(input)
+        update_display_word(compare_guess(input))
+      else
+        @chances -= 1
+      end
+      check_game_progress
+    end
+
+    def confirm_exit
+      puts "Are you sure you want to exit? (y/anything)"
+      if gets.chomp == "y"
+        puts "Bye Bye!"
+        exit
+      else
+        return
+      end
     end
 
     def play
       update_winning_word
-      binding.pry
+      # puts winning_word.join("")
       while true
         display_progress
         puts solicit_move
-        guess = gets.chomp
-        if winning_word.include?(guess)
-          update_display_word(compare_guess(guess))
-        else
-          @chances -= 1
+        input = gets.chomp
+        case input
+          when "exit"
+            confirm_exit
+          when "save"
+            save_progress
+          when "load"
+            load_progress
+          else
+            handle_input(input)
         end
-        check_game_progress
       end
     end
 
