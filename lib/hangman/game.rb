@@ -66,8 +66,6 @@ module Hangman
     def reset
       @winning_word = @@dictionary.sample.split('')
       @display_word = Array.new(winning_word.length)
-      binding.pry
-      puts winning_word
       @chances = 7
     end
 
