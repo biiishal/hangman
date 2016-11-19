@@ -5,16 +5,16 @@ module Hangman
 
   class Game
     # @@dictionary_path = "../data/dictionary.txt"
-    attr_reader :player
-    attr_accessor :display_word, :winning_word
+    attr_accessor :display_word, :winning_word, :player
     def initialize(player)
+      @chances = 7
       @player = player
       @@dictionary = File.open("./data/dictionary.txt").map { |word| word.strip }
     end
 
     def update_winning_word
-      winning_word = @@dictionary.sample
-      display_word = Array.new(winning_word.length)
+      @winning_word = @@dictionary.sample.split('')
+      @display_word = Array.new(winning_word.length)
     end
 
     def solicit_move
@@ -22,7 +22,9 @@ module Hangman
     end
 
     def compare_guess(guess)
-      { char: guess, idx: winning_word.index(guess) }
+      idx = @winning_word.index(guess)
+      @winning_word[idx] = nil
+      { char: guess, idx: idx }
     end
 
     def update_display_word(input)
@@ -30,7 +32,7 @@ module Hangman
     end
 
     def display_progress
-      puts display_word + "  Your score:" +player.score
+      puts display_word.to_s + "  Your score:" +player.score.to_s
     end
 
     def game_win_message
@@ -41,30 +43,35 @@ module Hangman
       "You lost."
     end
 
-    def check_game_progress(chances)
+    def check_game_progress
       if display_word.none? { |e| e.nil? }
-        player.score += 1
-        game_win_message
-      elsif chances == 0
-        game_over_message
-        false
+        @player.score += 1
+        puts game_win_message
+        reset
+      elsif @chances == 0
+        puts game_over_message
+        reset
       end
+    end
+
+    def reset
+      update_winning_word
+      @chances = 7
     end
 
     def play
       update_winning_word
-      chances = 7
       binding.pry
       while true
         display_progress
         puts solicit_move
         guess = gets.chomp
-        if winning_word.match(guess)
+        if winning_word.include?(guess)
           update_display_word(compare_guess(guess))
         else
-          chances -= 1
+          @chances -= 1
         end
-        check_game_progress(chances)
+        check_game_progress
       end
     end
 
